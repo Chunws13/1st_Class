@@ -12,10 +12,22 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            this.belongsTo(models.Airports, {
+                targetKey: "airport_id",
+                foreignKey: "sairport_id",
+                as: "start_airport"
+
+            })
+
+            this.belongsTo(models.Airports, {
+                targetKey: "airport_id",
+                foreignKey: "eairport_id",
+                as: "end_airport"
+            })
         }
     }
     Flights.init({
-        airport_id: {
+        flight_id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
@@ -39,11 +51,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         start_datetime: {
             allowNull: false,
-            type: Sequelize.STRING
+            type: Sequelize.DATE
         },
         end_datetime: {
             allowNull: false,
-            type: Sequelize.STRING
+            type: Sequelize.DATE
         },
         price: {
             allowNull: false,

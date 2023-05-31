@@ -3,7 +3,7 @@
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('Flights', {
-            airport_id: {
+            flight_id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
@@ -15,11 +15,21 @@ module.exports = {
             },
             sairport_id: {
                 allowNull: false,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                references: {
+                    model: "Airports",
+                    key: "airport_id"
+                },
+                onDelete: "CASCADE"
             },
             eairport_id: {
                 allowNull: false,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                references: {
+                    model: "Airports",
+                    key: "airport_id"
+                },
+                onDelete: "CASCADE"
             },
             company: {
                 allowNull: false,
@@ -27,11 +37,11 @@ module.exports = {
             },
             start_datetime: {
                 allowNull: false,
-                type: Sequelize.STRING
+                type: Sequelize.DATE
             },
             end_datetime: {
                 allowNull: false,
-                type: Sequelize.STRING
+                type: Sequelize.DATE
             },
             price: {
                 allowNull: false,

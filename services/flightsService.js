@@ -9,8 +9,14 @@ class FlightsService {
         return airports;
     };
 
-    findFlights = async(sairport_id, eairport_id, start_datetime) => {
-        const flights = await this.flightsRepository.findFlights(sairport_id, eairport_id, start_datetime);
+    findFlights = async(sairport_id, eairport_id, start_datetime, people_num) => {
+        let flights = await this.flightsRepository.findFlights(sairport_id, eairport_id, start_datetime, people_num);
+
+        if (flights.length === 0) {
+            await this.flightsRepository.createFlights(sairport_id, eairport_id, start_datetime);
+        }
+
+        flights = await this.flightsRepository.findFlights(sairport_id, eairport_id, start_datetime, people_num);
         return flights;
     };
 

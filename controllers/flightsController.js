@@ -9,8 +9,8 @@ class FlightsController {
     };
 
     findFlights = async(req, res, next) => {
-        const { sairport_id, eairport_id, start_datetime } = req.body;
-        const flights = await this.flightsServeice.findFlights(sairport_id, eairport_id, start_datetime);
+        const { sairport_id, eairport_id, start_datetime, people_num } = req.body;
+        const flights = await this.flightsServeice.findFlights(sairport_id, eairport_id, start_datetime, people_num);
         res.status(200).json({ data: flights });
     };
 
