@@ -24,7 +24,7 @@ module.exports = () => {
                             kakao_id: profile.id,
                             provider: "kakao",
                         });
-                        done(null, { newUser, accessToken });
+                        done(null, newUser);
                     }
                 } catch (error) {
                     console.error(error);
