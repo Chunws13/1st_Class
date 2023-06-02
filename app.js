@@ -44,6 +44,6 @@ app.get('/', async(req, res) => {
 })
 
 
-app.listen(app.get("port"), () => {
-    console.log(app.get("port"), "번 포트에서 대기중");
+app.listen(port, () => {
+    console.log(port, "번 포트에서 대기중");
 });

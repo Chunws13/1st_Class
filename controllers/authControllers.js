@@ -1,4 +1,4 @@
-const AuthServeice = require("../services/authService"); // service 영역
+const AuthServeice = require("../services/authServices"); // service 영역
 
 class AuthController {
     authServeice = new AuthServeice();
