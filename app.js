@@ -1,27 +1,21 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 const session = require("express-session");
-const dotenv = require("dotenv");
-
-dotenv.config();
-const authRouter = require("./routes/auth");
-const { sequelize } = require("./models");
+const passportConfig = require("./passport");
+const dotenv = require("dotenv")
 
 const app = express();
-app.set("port", process.env.PORT || 3000);
-app.set("view engine", "html");
+const port = 3000;
+const cors = require("cors");
 
-sequelize
-    .sync({ force: false })
-    .then(() => {
-        console.log("데이터베이스 연결 성공");
-    })
-    .catch((err) => {
-        console.error(err);
-    });
+dotenv.config();
 
-app.use(express.static(path.join(__dirname, "public")));
+passportConfig(app); // 패스포트 설정
+
+// routes
+const authRouter = require("./routes/auth");
+const flightsRouter = require("./routes/flightsRouter");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -37,25 +31,14 @@ app.use(
     })
 );
 
-const passportConfig = require("./passport");
-passportConfig(app); // 패스포트 설정
-
+app.use('/api', [flightsRouter]);
 app.use("/auth", authRouter);
 
-app.use((req, res, next) => {
-    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
-    error.status = 404;
-    next(error);
-});
+app.get('/', async(req, res) => {
+    return res.send("Here is 1st Class backend Server!");
+})
 
-app.use((err, req, res, next) => {
-    res.locals.message = err.message;
-    res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
-    res.status(err.status || 500);
-    res.render("error");
-});
 
 app.listen(app.get("port"), () => {
     console.log(app.get("port"), "번 포트에서 대기중");
 });
- 

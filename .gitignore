@@ -1,6 +1,2 @@
 node_modules/*
-view/*
 .env
-config/*
-package-lock.json
-package.json
