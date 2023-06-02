@@ -1,5 +1,4 @@
 const FlightsRepository = require("../repositories/flightsRepositories");
-const { Airports } = require("../models");
 
 class FlightsService {
     flightsRepository = new FlightsRepository();

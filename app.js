@@ -13,7 +13,7 @@ dotenv.config();
 passportConfig(app); // 패스포트 설정
 
 // routes
-const authRouter = require("./routes/auth");
+const authRouter = require("./routes/authRouter");
 const flightsRouter = require("./routes/flightsRouter");
 
 app.use(express.json());

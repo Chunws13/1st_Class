@@ -1,7 +1,7 @@
 const epxress = require("express");
 const router = epxress.Router();
 
-const FlightsController = require("../controllers/flightsController");
+const FlightsController = require("../controllers/flightsControllers");
 const flightsController = new FlightsController();
 
 router.get('/airports', flightsController.findAirports);
