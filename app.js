@@ -16,6 +16,11 @@ passportConfig(app); // 패스포트 설정
 const authRouter = require("./routes/authRouter");
 const flightsRouter = require("./routes/flightsRouter");
 
+app.use(cors({
+    origin: "*",
+    methods: "GET, HEAD, POST, PUT, DELETE"
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
