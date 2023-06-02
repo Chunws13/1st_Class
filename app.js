@@ -10,7 +10,6 @@ const cors = require("cors");
 
 dotenv.config();
 
-passportConfig(app); // 패스포트 설정
 
 // routes
 const authRouter = require("./routes/authRouter");
@@ -36,6 +35,7 @@ app.use(
     })
 );
 
+passportConfig(app); // 패스포트 설정
 app.use('/api', [flightsRouter]);
 app.use("/auth", authRouter);
 
