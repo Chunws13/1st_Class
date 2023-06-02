@@ -1,15 +1,5 @@
 const jwt = require("jsonwebtoken");
 
-const generateRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      id: user.user_id,
-    },
-    process.env.REFRESH_SECRET,
-    { expiresIn: "30d" }
-  );
-};
-
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.token;
   
