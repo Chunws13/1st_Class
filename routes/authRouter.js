@@ -16,7 +16,6 @@ router.get(
     }),
     async (req, res) => {
         var {kakao_id} = req.user;
-        console.log(`이걸봐` + req.user);
 
         const user = await Users.findOne({ where: { kakao_id } });
         const token = jwt.sign({ user_id: Users.user_id }, 'firstclass')
