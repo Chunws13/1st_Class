@@ -7,15 +7,14 @@ const authController = new AuthController();
 const { Users } = require("../models");
 
 router.get("/kakao", passport.authenticate("kakao"));
-//router.get("/kakao/callback", passport.authenticate("kakao", { failureRedirect: "/" }, authController.login));
 
 router.get(
     "/kakao/callback",
     passport.authenticate("kakao", {
         failureRedirect: "/",
     }),
-    async (req, res) => {
-        var {kakao_id} = req.user;
+    async(req, res) => {
+        var { kakao_id } = req.user;
 
         const user = await Users.findOne({ where: { kakao_id } });
         const token = jwt.sign({ user_id: Users.user_id }, 'firstclass')
@@ -28,7 +27,5 @@ router.get(
 );
 
 router.get("/logout", authController.logout);
-
-//-----------------------------
 
 module.exports = router;

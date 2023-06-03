@@ -10,7 +10,6 @@ const cors = require("cors");
 
 dotenv.config();
 
-
 // routes
 const authRouter = require("./routes/authRouter");
 const flightsRouter = require("./routes/flightsRouter");
