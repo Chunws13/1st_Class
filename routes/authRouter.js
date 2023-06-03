@@ -1,9 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken")
-const AuthController = require("../controllers/authControllers");
 const router = express.Router();
-const authController = new AuthController();
 const { Users } = require("../models");
 
 router.get("/kakao", passport.authenticate("kakao"));
@@ -25,7 +23,5 @@ router.get(
             .json({ token: `Bearer ${token}`, message: "로그인 성공" });
     }
 );
-
-router.get("/logout", authController.logout);
 
 module.exports = router;
