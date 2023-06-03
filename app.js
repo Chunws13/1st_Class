@@ -1,14 +1,30 @@
 const express = require("express");
+const { Server } = require("http");
+
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passportConfig = require("./passport");
 const dotenv = require("dotenv")
 
-const app = express();
-const port = 3000;
+const socketIo = require("socket.io");
 const cors = require("cors");
 
+const app = express();
+const http = Server(app);
+const io = socketIo(http);
+
 dotenv.config();
+
+// socket
+io.on("connection", (sock) => {
+    console.log("새로운 소켓이 연결되었습니다.");
+
+    sock.on("disconnect", () => {
+        console.log(`${sock.id}님이 연결을 종료했습니다.`);
+    });
+});
+
+// 
 
 // routes
 const authRouter = require("./routes/authRouter");
@@ -39,10 +55,10 @@ app.use('/api', [flightsRouter]);
 app.use("/auth", authRouter);
 
 app.get('/', async(req, res) => {
-    return res.send("Here is 1st Class backend Server!");
-})
+    return res.sendFile(__dirname + '/index.html');
+});
 
 
-app.listen(port, () => {
-    console.log(port, "번 포트에서 대기중");
+http.listen(3000, () => {
+    console.log(3000, "번 포트에서 대기중");
 });
