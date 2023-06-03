@@ -33,11 +33,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             type: Sequelize.STRING
         },
-        updated_at: {
-            allowNull: false,
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.fn("now")
-        },
         createdAt: { // createdAt 필드 제거
             type: Sequelize.VIRTUAL,
             defaultValue: Sequelize.fn('now')
