@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            this.hasMany(models.Reservations, {
+                sourceKey: "user_id",
+                foreignKey: "user_id"
+            });
+
         }
     }
     Users.init({
@@ -27,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         kakao_id: {
             allowNull: false,
-            type: Sequelize.INTEGER
+            type: Sequelize.BIGINT
         },
         provider: {
             allowNull: false,

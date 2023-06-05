@@ -15,7 +15,7 @@ module.exports = {
             },
             kakao_id: {
                 allowNull: false,
-                type: Sequelize.INTEGER
+                type: Sequelize.BIGINT
             },
             provider: {
                 allowNull: false,
