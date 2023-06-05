@@ -17,7 +17,7 @@ dotenv.config();
 
 // socket
 io.on("connection", (socket) => {
-    console.log("새로운 소켓이 연결되었습니다.");
+    console.log(`${socket.id}님이 입장했습니다.`);
 
     socket.on("disconnect", () => {
         console.log(`${socket.id}님이 연결을 종료했습니다.`);
@@ -25,9 +25,8 @@ io.on("connection", (socket) => {
 
     socket.on("message", (data) => {
         io.emit("message", data);
-        console.log(data);
+        console.log("이거", data);
     });
-
 });
 
 // 

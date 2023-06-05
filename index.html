@@ -7,33 +7,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/socket.io/socket.io.js"></script>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        const socket = io("ws://localhost:3000");
+
+        socket.on("connect", () => {
+            socket.send("Hello!");
+        });
+
+        socket.on("message", (data) => {
+            console.log("받은", data);
+        });
+
+        socket.on("message1", (data) => {
+            console.log("돌려받은", data);
+        });
+
+        const sendEvent = () => {
+            let msg = document.querySelector('#box');
+            let content = msg.value;
+
+            console.log(content);
+            socket.emit("message",
+                content
+            );
+
+            msg.value = '';
+        };
+    </script>
     <title>Document</title>
 </head>
 
 <body>
     <h1> hello world!</h1>
-    <script>
-        const socket = io("ws://localhost:3000");
-        socket.on("connect", () => {
-            socket.send("Hello!");
-        })
-
-        socket.on("message", (data) => {
-            console.log(data);
-        })
-
-        const sendEvent = () => {
-            let msg = document.getElementById('box').textContent;
-            console.log(msg)
-            socket.on("message", (msg) => {
-                console.log(123)
-                socket.send("msg");
-            });
-        };
-    </script>
-
     <input id="box" type="text" placeholder="대화 내용을 입력해주세요" />
-    <button onclick=sendEvent()> 전송 </button>
+    <button onclick="sendEvent()"> 전송 </button>
 </body>
 
 </html>
