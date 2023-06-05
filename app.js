@@ -16,12 +16,18 @@ const io = socketIo(http);
 dotenv.config();
 
 // socket
-io.on("connection", (sock) => {
+io.on("connection", (socket) => {
     console.log("새로운 소켓이 연결되었습니다.");
 
-    sock.on("disconnect", () => {
-        console.log(`${sock.id}님이 연결을 종료했습니다.`);
+    socket.on("disconnect", () => {
+        console.log(`${socket.id}님이 연결을 종료했습니다.`);
     });
+
+    socket.on("message", (data) => {
+        io.emit("message", data);
+        console.log(data);
+    });
+
 });
 
 // 
@@ -57,7 +63,6 @@ app.use("/auth", authRouter);
 app.get('/', async(req, res) => {
     return res.sendFile(__dirname + '/index.html');
 });
-
 
 http.listen(3000, () => {
     console.log(3000, "번 포트에서 대기중");

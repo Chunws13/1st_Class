@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> -->
-
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <title>Document</title>
 </head>
 
@@ -21,10 +21,19 @@
         socket.on("message", (data) => {
             console.log(data);
         })
+
+        const sendEvent = () => {
+            let msg = document.getElementById('box').textContent;
+            console.log(msg)
+            socket.on("message", (msg) => {
+                console.log(123)
+                socket.send("msg");
+            });
+        };
     </script>
-    <script>
-        fetch("http://52.79.197.128/auth/kakao")
-    </script>
+
+    <input id="box" type="text" placeholder="대화 내용을 입력해주세요" />
+    <button onclick=sendEvent()> 전송 </button>
 </body>
 
 </html>
