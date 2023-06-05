@@ -1,34 +1,41 @@
 const jwt = require("jsonwebtoken");
 
-const verifyToken = async (req, res, next) => {
-    try {
-        const { RefreshToken } = req.header ;
+const generateToken = (req, res, next) => {
+    const user = req.user; // User information obtained from the authentication process
 
-        if (!RefreshToken) {
-            return res
-                .status(403)
-                .json({ errorMessage: "로그인이 필요한 서비스입니다." });
-        }
+    const user_id = user._id;
+    const token = jwt.sign({ user_id }, "firstclass");
 
-        const [authType, authToken] = RefreshToken.split(" ");
-        console.log(RefreshToken, authType, authToken);
+    res.locals.token = token;
 
-        if (authType !== "Bearer" || !authToken) {
-            return res.status(403).json({ errorMessage: "토큰 정보 오류" });
-        }
+    next();
+};
 
-        const { user_id } = jwt.verify(authToken, "firstclass");
-        const user = await Users.findOne({ where: { user_id } });
+const verifyToken = (req, res, next) => {
+    const token = req.query.token;
 
-        res.locals.user = user;
+    if (token && validateToken(token)) {
+        req.user = {
+            token: token,
+        };
         next();
-    } catch (error) {
-        return res
-            .status(500)
-            .json({ errorMessage: "로그인이 필요한 서비스입니다." });
+    } else {
+        res.status(401).json({ error: "Unauthorized" });
     }
 };
 
+function validateToken(token) {
+    try {
+        const decoded = jwt.verify(token, "firstclass");
+        const user_id = decoded.user_id;
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 module.exports = {
-  verifyToken,
+    generateToken,
+    verifyToken,
 };
