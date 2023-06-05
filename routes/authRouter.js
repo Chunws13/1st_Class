@@ -21,7 +21,7 @@ const kakaoCallback = (req, res, next) => {
 router.get("/kakao/callback", kakaoCallback, generateToken, (req, res) => {
     const token = res.locals.token;
 
-    res.redirect("http://localhost:3001/?token=" + token);
+    res.redirect("http://52.79.197.128/?token=" + token);
 });
 
 module.exports = router;
