@@ -20,7 +20,7 @@ const kakaoCallback = (req, res, next) => {
 router.get("/kakao/callback", kakaoCallback, generateToken, (req, res) => {
     const token = res.locals.token;
 
-    res.redirect("http://localhost:3000/?token=" + token);
+    res.redirect("https://first-class-rho.vercel.app/?token=" + token);
 });
 
 module.exports = router;
