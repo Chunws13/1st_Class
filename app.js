@@ -15,17 +15,28 @@ const io = socketIo(http);
 
 dotenv.config();
 
-// socket
-io.on("connection", (socket) => {
-    console.log(`${socket.id}님이 입장했습니다.`);
+app.use(cors({
+    origin: "*",
+    methods: "GET, HEAD, POST, PUT, DELETE"
+}));
 
-    socket.on("disconnect", () => {
-        console.log(`${socket.id}님이 연결을 종료했습니다.`);
+// socket
+let total_user = 0;
+io.on("connection", (socket) => {
+    total_user += 1;
+    io.emit("totalUser", total_user); // 전체 유저 수 전달
+
+    socket.emit("userId", socket.id); // 유저 ID 전달
+    socket.broadcast.emit("enterance", `${socket.id}님이 입장했습니다.`); // 입장 알림
+
+    socket.on("sendMsg", (message) => { // 클라이언트로부터 메세지 수신
+        io.emit("emitMsg", { sender: socket.id, message }); // 다른 클라이언트에게 메세지 전송
     });
 
-    socket.on("message", (data) => {
-        io.emit("message", data);
-        console.log("이거", data);
+    socket.on("disconnect", () => {
+        socket.broadcast.emit(`${socket.id}님이 연결을 종료했습니다.`);
+        total_user -= 1;
+        io.emit("totalUser", total_user); // 전체 유저 수 전달
     });
 });
 
@@ -34,11 +45,6 @@ io.on("connection", (socket) => {
 // routes
 const authRouter = require("./routes/authRouter");
 const flightsRouter = require("./routes/flightsRouter");
-
-app.use(cors({
-    origin: "*",
-    methods: "GET, HEAD, POST, PUT, DELETE"
-}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -54,7 +60,6 @@ app.use(
         },
     })
 );
-
 passportConfig(app); // 패스포트 설정
 app.use('/api', [flightsRouter]);
 app.use("/auth", authRouter);

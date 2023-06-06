@@ -21,7 +21,7 @@ class FlightsRepository {
     };
 
     // db에서 해당 조건에 맞는 데이터 있는지 확인
-    findFlights = async(sairport_id, eairport_id, start_datetime, people_num) => {
+    findFlights = async(sairport_id, eairport_id, start_datetime, people_num, sort_field, sort_by) => {
         try {
             const newDate = new makeDate(start_datetime);
             const newDate2 = new makeDate(start_datetime);
@@ -30,6 +30,9 @@ class FlightsRepository {
             const afterOneDate = newDate2.mkDate();
 
             afterOneDate.setDate(afterOneDate.getDate() + 1);
+
+            const field = sort_field === "price" ? "price" : "start_datetime";
+            const order = sort_by === "asc" ? "ASC" : "DESC";
 
             const flights = await Flights.findAll({
                 attributes: ["flight_id", "flight_num", "company", "sairport_id", "eairport_id",
@@ -64,12 +67,14 @@ class FlightsRepository {
                     model: Airports,
                     attributes: ["airport_id", "airport_city", "airport_code"],
                     as: "end_airport"
-                }]
+                }],
+                order: [
+                    [field, order]
+                ]
             });
             return flights;
 
         } catch (error) {
-            console.log(error);
             const errorMessage = "DB 정보 조회 실패";
             return errorMessage;
         }
@@ -95,47 +100,51 @@ class FlightsRepository {
 
             // 공공 데이터 포털에서 가져오기
             let res = await govApi(startCityName.dataValues.airport_code, endCityName.dataValues.airport_code, start_date);
-            const data = res.data.response.body.items.item;
-            console.log(data)
-            for await (let d of data) {
-                // 남은 자리, 비용 난수 생성
-                const seatLeft = makeRandom(1, 50);
-                const price = makeRandom(100, 500) * 1000;
+            let data = res.data.response.body.items.item;
 
-                const { arrAirportNm, depAirportNm, arrPlandTime, depPlandTime } = d;
+            let message = '해당 기준의 운행 정보는 존재하지 않습니다.';
+            if (data !== undefined) {
 
-                // 이름 기준으로 공항 ID 찾기
-                const depAirportId = await Airports.findOne({
-                    attribute: ["airport_id"],
-                    where: { airport_city: depAirportNm }
-                });
+                for await (let d of data) {
+                    // 남은 자리, 비용 난수 생성
+                    const seatLeft = makeRandom(1, 50);
+                    const price = makeRandom(100, 500) * 1000;
 
-                const arrAirportId = await Airports.findOne({
-                    attribute: ["airport_id"],
-                    where: { airport_city: arrAirportNm }
-                });
+                    const { arrAirportNm, depAirportNm, arrPlandTime, depPlandTime } = d;
 
-                // response 데이터 에서 공항 ID 찾기
-                const startAiportId = depAirportId.dataValues.airport_id;
-                const endAiportId = arrAirportId.dataValues.airport_id;
+                    // 이름 기준으로 공항 ID 찾기
+                    const depAirportId = await Airports.findOne({
+                        attribute: ["airport_id"],
+                        where: { airport_city: depAirportNm }
+                    });
 
-                // 
-                const start_time = new makeDate(String(depPlandTime));
-                const end_time = new makeDate(String(arrPlandTime));
+                    const arrAirportId = await Airports.findOne({
+                        attribute: ["airport_id"],
+                        where: { airport_city: arrAirportNm }
+                    });
 
-                await Flights.create({
-                    flight_num: d.vihicleId,
-                    sairport_id: startAiportId,
-                    eairport_id: endAiportId,
-                    company: d.airlineNm,
-                    start_datetime: start_time.mkDatetime(),
-                    end_datetime: end_time.mkDatetime(),
-                    price,
-                    seat_left: seatLeft
-                });
+                    // response 데이터 에서 공항 ID 찾기
+                    const startAiportId = depAirportId.dataValues.airport_id;
+                    const endAiportId = arrAirportId.dataValues.airport_id;
+
+                    // 
+                    const start_time = new makeDate(String(depPlandTime));
+                    const end_time = new makeDate(String(arrPlandTime));
+
+                    await Flights.create({
+                        flight_num: d.vihicleId,
+                        sairport_id: startAiportId,
+                        eairport_id: endAiportId,
+                        company: d.airlineNm,
+                        start_datetime: start_time.mkDatetime(),
+                        end_datetime: end_time.mkDatetime(),
+                        price,
+                        seat_left: seatLeft
+                    });
+                };
+                message = "공공 데이터 API 기반 데이터 생성 완료";
             };
-            const message = "공공 데이터 API 기반 데이터 생성 완료";
-            console.log(message)
+
             return message;
 
         } catch (error) {
