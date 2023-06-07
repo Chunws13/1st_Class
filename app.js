@@ -45,6 +45,7 @@ io.on("connection", (socket) => {
 // routes
 const authRouter = require("./routes/authRouter");
 const flightsRouter = require("./routes/flightsRouter");
+const reservationsRouter = require("./routes/reservationsRouter");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -61,7 +62,7 @@ app.use(
     })
 );
 passportConfig(app); // 패스포트 설정
-app.use('/api', [flightsRouter]);
+app.use('/api', [flightsRouter, reservationsRouter]);
 app.use("/auth", authRouter);
 
 app.get('/', async(req, res) => {
