@@ -1,7 +1,7 @@
 const { Reservations } = require("../models");
 
 class ReservationsRepository {
-    findReservations = async (user_id, flight_id, people_num) => {
+    findReservations = async(user_id, flight_id, people_num) => {
         try {
             const reservations = await Reservations.findAll({
                 attributes: [
@@ -12,8 +12,9 @@ class ReservationsRepository {
                 ],
             });
             if (reservations.length === 0) {
-                return res.status(400).json({ message: "예약 정보가 없습니다." });
-              }
+                const message = "예약 정보가 없습니다."
+                return message;
+            }
             return reservations;
         } catch (error) {
             const errorMessage = "예약 정보 조회에 실패했습니다.";
@@ -21,7 +22,7 @@ class ReservationsRepository {
         }
     };
 
-    createReservations = async (user_id, flight_id, people_num) => {
+    createReservations = async(user_id, flight_id, people_num) => {
         try {
             // 예약할 항공권 할당
             const targetFlight = await Flights.findOne({

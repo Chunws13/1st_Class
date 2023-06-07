@@ -1,11 +1,11 @@
 const epxress = require("express");
 const router = epxress.Router();
 
-const auth = require("../middlewares/auth");
+const { verifyToken } = require("../middlewares/auth");
 const ReservationsController = require("../controllers/reservationsControllers");
 const reservationsController = new ReservationsController();
 
-router.get("/reservation", auth, reservationsController.findReservations);
-router.post("/reservation", auth, reservationsController.createReservations);
+router.get("/reservation", verifyToken, reservationsController.findReservations);
+router.post("/reservation", verifyToken, reservationsController.createReservations);
 
 module.exports = router;
