@@ -16,6 +16,7 @@ class ReservationsRepository {
                 return message;
             }
             return reservations;
+
         } catch (error) {
             const errorMessage = "예약 정보 조회에 실패했습니다.";
             return errorMessage;
@@ -30,7 +31,6 @@ class ReservationsRepository {
             });
 
             const total_price = targetFlight.price * people_num;
-
             const reservations = await Reservations.create({
                 user_id,
                 flight_id,
@@ -38,8 +38,8 @@ class ReservationsRepository {
                 total_price,
             });
             return reservations;
+
         } catch (error) {
-            console.log(error);
             const errorMessage = "reservation 오류";
             return errorMessage;
         }
