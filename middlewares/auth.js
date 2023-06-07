@@ -13,12 +13,12 @@ const generateToken = (req, res, next) => {
 const verifyToken = (req, res, next) => {
     // 인증 완료
     try {
-        console.log(req.headers.refreshtoken);
-        req.decoded = jwt.verify(req.headers.refreshtoken, "firstclass");
+        req.decoded = jwt.verify(req.headers.Refreshtoken, "firstclass");
         return next();
     }
     // 인증 실패
     catch (error) {
+        console.log(">>>", error);
         // 유효시간이 초과된 경우
         if (error.name === 'TokenExpiredError') {
             return res.status(419).json({
