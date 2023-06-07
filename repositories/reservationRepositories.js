@@ -40,6 +40,7 @@ class ReservationsRepository {
             return reservations;
 
         } catch (error) {
+            console.log(error);
             const errorMessage = "reservation 오류";
             return errorMessage;
         }
